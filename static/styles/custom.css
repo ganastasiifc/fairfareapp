@@ -1,0 +1,54 @@
+html, body, #map {
+    height: 100% !important;
+    width: 100vw !important;
+}
+
+button{
+    background-color:#f10707 !important;
+    margin-left:2vw !important;
+    margin-right:2vw !important;
+}
+
+a{
+    color:black !important;
+    font-size:6vw;
+}
+
+body.login-body{
+    font-family: Garamond, serif;
+    background-image:  url('../images/background.jpg');
+    /* background-image: linear-gradient(#FFE6E8, #d68089ff);
+    background-image: url('../icons/donnina2.png');*/
+    background-color: #FCFCFC;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    height:100%;
+    width:100%;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
+
+@media screen and (max-width : 1920px){
+  h2{
+    font-size: 2vw;
+  }
+  #div-only-mobile{
+  display:none;
+  }
+}
+@media screen and (max-width : 906px){
+h2{
+    font-size: 3vw;
+  }
+ #div-only-mobile{
+  display: block;
+  }
+}
+
+
+
+#form-login {
+    background-color: transparent; /* #d68089ff; */
+}

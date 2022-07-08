@@ -1,0 +1,93 @@
+ <!DOCTYPE html>
+ <html>
+ <head><title>OSM and Leaflet</title>
+               <meta name='viewport' content='width=device-width, initial-scale=1'>
+               <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css'>
+               <link rel='stylesheet' href='https://bulma.io/vendor/fontawesome-free-5.15.2-web/css/all.min.css'>
+               <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css'>
+               <link rel='stylesheet' href='https://bulma.io/css/bulma-docs.min.css?v=202206251943'>
+               <link rel='canonical' href='https://bulma.io/documentation/layout/'>
+               <link rel='alternate' type='application/rss+xml' title='Bulma: Free, open source, and modern CSS framework based on Flexbox'
+               href='https://bulma.io/atom.xml'>
+               <link rel='stylesheet' href='../static/styles/custom.css'>
+               <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+               <link rel = 'stylesheet' href = 'http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css'/>
+               <link rel='stylesheet' href='https://unpkg.com/leaflet@1.8.0/dist/leaflet.css'
+               integrity='sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=='
+               crossorigin=''/>
+     <script src='https://unpkg.com/leaflet@1.8.0/dist/leaflet.js'
+               integrity='sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=='
+               crossorigin=''></script>
+               <script src='https://code.jquery.com/jquery-3.6.0.min.js'
+                       integrity='sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=' crossorigin='anonymous'></script>
+ </head>
+                <body>
+                <div style="text-align:center;" > <a href="/">
+            <img style="height:30vw;" src="../static/images/logo.png"></a>
+        </div>
+                <nav class='breadcrumb is-centered' aria-label='breadcrumbs'> <ul>
+                <li><a href='maps'>MAP</a></li><li class='is-active'><a href='#' aria-current='page'>LIST</a></li>
+                </ul></nav>
+
+                <div class="tabs is-centered is-boxed" >
+                  <ul>
+                    <li class="is-active">
+                        <a style="font-size:3vw">Sorted by <br> Distance</a>
+                    </li>
+                    <li>
+                      <a href="list_sale" style="font-size:3vw">Sorted by <br> Sale </a>
+    </li>
+
+
+  </ul>
+</div>
+                <section id="corpo"></section>
+
+  <script>
+
+
+      $(document).ready(function () {
+    $.getJSON('https://servicemap.disit.org/WebAppGrafo/api/v1/?selection=43.7218624;10.4077871&categories=Bike_sharing_rack&maxDists=2&maxResults=100&lang=it&geometry=false&format=json&realtime=true', function(data){
+    var array = [];
+    for (var key in data["Services"]["features"]){
+        for (var i in data["Services"]["features"][key]["properties"]){
+        if (i == "distance"){
+        var rand = Math.floor(Math.random() * 91);
+            array.push(JSON.stringify({"name": data["Services"]["features"][key]["properties"]["name"], "distance": parseFloat(data["Services"]["features"][key]["properties"]["distance"]), "random": rand}));
+
+        }
+    }
+    }
+
+    sorted = Array.from(array).sort(function(a,b){
+        return JSON.parse(a).distance-JSON.parse(b).distance});
+
+    for (var elem in array){
+        var corpo = document.getElementById("corpo");
+        $("<div class='block' style='margin-left:5vw; margin-right:5vw; border: 1px solid #f10707 !important;border-radius: 16px;text-align:center;'><div class='block columns' style='margin:2vw 2vw 2vw 2vw;text-align:center;'><div class=' block column' style='text-align:center;'><figure class='media-left'>"+
+        "<img style='width:35vw; text-align:center;' src='../static/images/"+JSON.parse(sorted[elem]).name+".jpg'></figure></div>"+
+        "<div class='column'><div class='media-content'><div class='content'>"+
+        "<div style='font-size:4vw; text-align:center;'>"+JSON.parse(sorted[elem]).name+"</div>"+
+        "<br><div class='columns' style='text-align:center;'> <div class ='column'><img style='width:8vw; text-align:center;' src='../static/images/distance.png'> </div><div class='column' style='font-size:4vw; color:#f10707; text-align:center;'>  "+JSON.parse(sorted[elem]).distance+
+        "  Km </div></div> <div class='columns' style='text-align:center;'> <div class ='column'><img style='width:8vw; text-align:center;' src='../static/images/sale.png'> </div><div class='column' style='font-size:4vw; color:#f10707; text-align:center;'>  "+ JSON.parse(sorted[elem]).random +"% </div></div></div></div></div></div></div>").appendTo(corpo);
+
+    }
+
+                  });
+
+});
+  </script>
+
+
+
+</body>
+<script>
+function get_distance(elem){
+    return elem["distance"];
+}
+
+function get_discount(elem){
+    return elem["discount"];
+}
+</script>
+        </html>

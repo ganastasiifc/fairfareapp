@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+        <html>
+           <head>
+              <title>OSM and Leaflet</title>
+               <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://bulma.io/vendor/fontawesome-free-5.15.2-web/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css">
+    <link rel="stylesheet" href="https://bulma.io/css/bulma-docs.min.css?v=202206251943">
+    <link rel="canonical" href="https://bulma.io/documentation/layout/">
+    <link rel="alternate" type="application/rss+xml" title="Bulma: Free, open source, and modern CSS framework based on Flexbox" href="https://bulma.io/atom.xml">
+
+
+    <link rel="stylesheet" href="../static/styles/custom.css">
+
+               <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+              <link rel = "stylesheet" href = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+               <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+   integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+   crossorigin=""/>
+                <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+   integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+   crossorigin=""></script>
+               <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+
+           </head>
+
+
+<body>
+<div style="text-align:center;" >
+            <a href="/">
+            <img style="height:30vw;" src="../static/images/logo.png"></a>
+        </div>
+<nav class="breadcrumb is-centered" aria-label="breadcrumbs">
+  <ul>
+    <li class="is-active"><a href="#" aria-current="page">MAP</a></li>
+    <li><a href="list">LIST</a></li>
+  </ul>
+</nav>
+              <div id = "map" style="height: 1800px;"></div>
+                <script>
+
+                    var map = L.map('map').setView(L.latLng([43.7218624,10.4077871]), 20);
+
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© OpenStreetMap'
+                    }).addTo(map);
+
+                    var greenIcon = new L.Icon({
+                      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                      iconSize: [25, 41],
+                      iconAnchor: [12, 41],
+                      popupAnchor: [1, -34],
+                      shadowSize: [41, 41]
+                    });
+
+                    L.marker([43.7218624,10.4077871], {icon: greenIcon}).addTo(map).bindTooltip("You are here",
+                    {
+                        permanent: true,
+                        direction: 'right'
+                    });
+
+
+
+
+$(document).ready(function () {
+    $.getJSON('https://servicemap.disit.org/WebAppGrafo/api/v1/?selection=43.7218624;10.4077871&categories=Bike_sharing_rack&maxDists=2&maxResults=100&lang=it&geometry=false&format=json&realtime=true', function(data){
+    for (var key in data["Services"]["features"]){
+        for (var i in data["Services"]["features"][key]["geometry"]){
+        if (i == "coordinates"){
+             var lat = parseFloat(data["Services"]["features"][key]["geometry"][i][0])
+             var lon = parseFloat(data["Services"]["features"][key]["geometry"][i][1])
+
+            var lat_lon = L.latLng([lon,lat])
+            var sale = Math.floor(Math.random() * 91);
+            var layer = new L.marker(lat_lon).addTo(map).bindPopup(JSON.stringify(data["Services"]["features"][key]["properties"]["name"])+" - Sale: "+sale + "%");
+
+
+        }
+    }
+                    // alert(string_data)
+                    // var marker = L.marker([data.lat, data.lon]).addTo(map);
+                    }
+                  });
+
+});
+                  </script>
+
+           </body>
+<script>
+
+</script>
+        </html>
